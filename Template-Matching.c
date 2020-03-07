@@ -5,7 +5,7 @@
 extern void grayscale(char* source_file_name, char* destination_file_name)
 {
     FILE *fin, *fout;
-    unsigned int size_img, width, height;
+    unsigned int size, width, height;
     unsigned char pRGB[3], aux;
 
     printf("Source file name: %s\n", source_file_name);
@@ -20,13 +20,13 @@ extern void grayscale(char* source_file_name, char* destination_file_name)
     fout = fopen(destination_file_name, "wb+");
     if(fout == NULL)
     {
-        printf("Couldn't create destination file!");
+        printf("Couldn't create the destination file!");
         exit(1);
     }
 
     fseek(fin, 2, SEEK_SET);
-    fread(&size_img, sizeof(unsigned int), 1, fin);
-    printf("Image size in bytes: %u\n", size_img);
+    fread(&size, sizeof(unsigned int), 1, fin);
+    printf("Image size in bytes: %u\n", size);
 
     fseek(fin, 18, SEEK_SET);
     fread(&width, sizeof(unsigned int), 1, fin);
@@ -35,7 +35,7 @@ extern void grayscale(char* source_file_name, char* destination_file_name)
 
     fseek(fin, 0, SEEK_SET);
 
-    //copy byte by byte the source image in the new one
+    //copy byte by byte the source image into the new one
     unsigned char c;
     while(fread(&c,1,1,fin))
     {
@@ -50,7 +50,7 @@ extern void grayscale(char* source_file_name, char* destination_file_name)
     else
         padding = 0;
 
-    printf("padding = %u \n", padding);
+    printf("padding = % u \n", padding);
 
     fseek(fout, 54, SEEK_SET);
 
@@ -60,7 +60,7 @@ extern void grayscale(char* source_file_name, char* destination_file_name)
         for(j = 0; j < width; j++)
         {
             //read the pixel colors
-            fread(pRGB, 3, 1, fout);
+            fread(pRGB,3,1,fout);
             //conversion to gray pixel
             aux = 0.299*pRGB[2] + 0.587*pRGB[1] + 0.114*pRGB[0];
             pRGB[0] = pRGB[1] = pRGB[2] = aux;
